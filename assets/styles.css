@@ -71,6 +71,13 @@ body {
     background-size: contain;
 
 }
+#explosao1 {
+    position: absolute;
+    background-image: url('./imgs/explosao.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 50px;
+}
 
 #inicio {
     width: 350px;

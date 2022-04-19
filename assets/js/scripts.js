@@ -43,12 +43,13 @@ function start() {
 
     jogo.timer = setInterval(loop, 50)
     function loop() {
-        moveFundo()
+        //moveFundo()
         moveJogador()
         moveInimigo1()
         moveInimigo2()
         moveAmigo()
-        
+        colisao()
+
     }
 
     // Função que movimenta o fundo
@@ -122,8 +123,9 @@ function start() {
             $(amigo).css("left", 10)
         }
     }
+
     function atirar() {
-        if( podeAtirar) {
+        if (podeAtirar) {
             podeAtirar = false
             topo = parseInt($(jogador).css("top"))
             posicaoX = parseInt($(jogador).css("left"))
@@ -138,14 +140,87 @@ function start() {
 
         function executaDisparo() {
             posicaoX = parseInt($('#disparo').css("left"))
-            $('#disparo').css("left", posicaoX + 20 )
-            
-            if ( posicaoX > 900 ) {
-                window.clearInterval(tempoDisparo)
-                tempoDisparo = null
-                $('#disparo').remove()
-                podeAtirar = true
+            $('#disparo').css("left", posicaoX + 20)
 
+
+        }
+        if (posicaoX > 900) {
+            removeDisparo()
+        }
+
+    }
+    function removeDisparo() {
+        window.clearInterval(tempoDisparo)
+        tempoDisparo = null
+        $('#disparo').remove()
+        podeAtirar = true
+
+    }
+    function colisao() {
+
+        function colidiu(colidido, colisor) {
+            let aux = ($(colidido).collision($(colisor)))
+            if (aux.length > 0) {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        if (colidiu(jogador, inimigo1) || colidiu('#disparo', inimigo1)) {
+            inimigoX = parseInt($(inimigo1).css("left"))
+            inimigoY = parseInt($(inimigo1).css("top"))
+            reposicionaInimigo()
+            removeDisparo()
+            explosao(inimigoX + 20, inimigoY + 25)
+
+        }
+
+        if (colidiu(jogador, inimigo2) || colidiu('#disparo', inimigo2)) {
+            inimigoX = parseInt($(inimigo2).css("left"))
+            inimigoY = parseInt($(inimigo2).css("top"))
+            removeDisparo()
+            explosao(inimigoX + 50, inimigoY + 25)
+
+            $(inimigo2).css("left", 894)
+        }
+
+        if (colidiu(jogador, amigo)) {
+
+        }
+        if (colidiu(amigo, inimigo2)) {
+
+        }
+    }
+    function explosao(inimigoX, inimigoY) {
+
+        $(fundoGame).append("<div id='explosao1'></div>")
+        //$('#explosao1' ).css("background-image", "url('./assets/imgs/explosao.png')")
+        let div = $("#explosao1")
+        div.css("top", inimigoY)
+        div.css("left", inimigoX)
+        div.animate({ width: 200, opacity: 0 }, "slow")
+
+        let tempoExplosao = window.setInterval(removeExplosao, 1000)
+
+        function removeExplosao() {
+            $('#explosao1').remove()
+            window.clearInterval(tempoExplosao)
+            tempoExplosao = null
+        }
+    }
+    function reposicionaInimigo() {
+
+        let tempoColisao = window.setInterval(reposiciona, 2000)
+        inimigo1.remove()
+        function reposiciona() {
+            window.clearInterval(tempoColisao)
+            tempoColisao = null
+            if (true) {
+                $(fundoGame).append("<div id='inimigo1'></div>");
+                posicaoY = parseInt(Math.random() * 334)
+                $(inimigo1).css("left", 794)
+                $(inimigo1).css("top", posicaoY)
             }
         }
     }
