@@ -368,6 +368,7 @@ function start() {
         $(disparo).remove()
         window.clearInterval(jogo.timer)
         jogo.timer = null
+        somGameOver.play()
         $("#fundoGame").append("<div id='gameOver'></div>");
         $("#gameOver").html(
             "<h1>Game Over</h1><p>Pontos: " + pontos + "</p><h3 onclick='restart()'>Reiniciar</h3>"
@@ -378,6 +379,7 @@ function start() {
 function restart() {
     $("#gameOver").remove()
     const somGameOver = document.getElementById("somGameOver")
+    somGameOver.currentTime = 0
     somGameOver.pause()
     start()
 }
